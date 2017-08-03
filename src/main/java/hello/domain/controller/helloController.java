@@ -1,6 +1,6 @@
 package hello.domain.controller;
 
-import hello.domain.model.PlayerForTable;
+import hello.domain.model.Table;
 import hello.domain.service.TableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +16,7 @@ public class helloController {
 
 
     @RequestMapping("/")
-    public List<PlayerForTable> test(){
+    public List<Table> test(){
         return tableService.getTable();
     }
 

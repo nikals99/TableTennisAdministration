@@ -1,12 +1,12 @@
 package hello.domain.model;
 
-public class PlayerForTable {
+public class Table {
     private String name;
     private int gamesPlayed;
     private int gamesWon;
 
 
-    public PlayerForTable(String name) {
+    public Table(String name) {
         this.name = name;
     }
 

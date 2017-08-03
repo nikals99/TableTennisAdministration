@@ -25,11 +25,11 @@ public class Application {
     @Bean
     public CommandLineRunner commandLineRunner() {
         return args -> {
-            repository.save(new Match(1, "Niklas", "Stefan", "1:3"));
-            repository.save(new Match(2, "Rene", "Bernhard", "2:3"));
-            repository.save(new Match(3, "Sven", "Niklas", "3:1"));
-            repository.save(new Match(4, "Sven", "Niklas", "2:3"));
-            repository.save(new Match(5, "Sven", "Thomas", "3:2"));
+            repository.save(new Match( "Niklas", "Stefan", "1:3"));
+            repository.save(new Match( "Rene", "Bernhard", "2:3"));
+            repository.save(new Match( "Sven", "Niklas", "3:1"));
+            repository.save(new Match( "Sven", "Niklas", "2:3"));
+            repository.save(new Match( "Sven", "Thomas", "3:2"));
 
 
 

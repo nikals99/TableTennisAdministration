@@ -2,7 +2,7 @@ package hello.domain.service;
 
 import hello.domain.model.Match;
 import hello.domain.model.MatchRepository;
-import hello.domain.model.PlayerForTable;
+import hello.domain.model.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,18 +15,23 @@ public class TableService {
     @Autowired
     private MatchRepository repository;
 
-    List<PlayerForTable> players = new ArrayList<PlayerForTable>();
+    public List<Table> tables = new ArrayList<Table>();
+    List<Match> matches = new ArrayList<Match>();
 
-    public List<PlayerForTable> populateTable(){
-        addPlayers();
+    public List<Table> populateTable(){
+        for (Match match: repository.findAll()) {
+            matches.add(match);
+        }
+
+        addPlayers(matches);
         addWinLoss();
 
 
-        return players;
+        return tables;
     }
 
     public void addWinLoss(){
-        for(PlayerForTable player : players) {
+        for(Table player : tables) {
             for (Match match : repository.findByPlayer1(player.getName())) {
                 player.increaseGamesPlayed();
                 if(detectWinLoss(match.getResult()) > 0){
@@ -51,22 +56,22 @@ public class TableService {
         return scorePlayer1 - scorePlayer2;
     }
 
-    public void addPlayers(){
-        for (Match match: repository.findAll()) {
-            PlayerForTable tmp = new PlayerForTable(match.getPlayer1());
+    public void addPlayers(List<Match> matches){
+        for (Match match: matches) {
+            Table tmp = new Table(match.getPlayer1());
             if (!playerIsInTable(tmp)) {
-                players.add(tmp);
+                tables.add(tmp);
             }
 
-            tmp = new PlayerForTable(match.getPlayer2());
+            tmp = new Table(match.getPlayer2());
             if (!playerIsInTable(tmp)) {
-                players.add(tmp);
+                tables.add(tmp);
             }
         }
     }
 
-    public boolean playerIsInTable(PlayerForTable player){
-        for(PlayerForTable x : players){
+    public boolean playerIsInTable(Table player){
+        for(Table x : tables){
             if(x.getName() == player.getName()){
                 return true;
             }
@@ -74,8 +79,8 @@ public class TableService {
         return false;
     }
 
-    public List<PlayerForTable> getTable() {
+    public List<Table> getTable() {
         populateTable();
-        return players;
+        return tables;
     }
 }
