@@ -10,21 +10,36 @@ public class Table {
     public List<PlayerForTable> populateTable(MatchRepository repository){
         this.repository = repository;
         addPlayers();
-        addWinLos();
+        addWinLoss();
 
 
         return players;
     }
 
-    private void addWinLos(){
+    private void addWinLoss(){
         for(PlayerForTable player : players) {
             for (Match match : repository.findByPlayer1(player.getName())) {
                 player.increaseGamesPlayed();
+                if(detectWinLoss(match.getResult()) > 0){
+                    player.increaseGamesWon();
+                }
             }
             for (Match match : repository.findByPlayer2(player.getName())) {
                 player.increaseGamesPlayed();
+                if(detectWinLoss(match.getResult()) < 0){
+                    player.increaseGamesWon();
+                }
             }
         }
+    }
+
+
+    private int detectWinLoss(String result){
+        String[] strings = result.split(":");
+        int scorePlayer1 = Integer.valueOf(strings[0]);
+        int scorePlayer2 = Integer.valueOf(strings[1]);
+
+        return scorePlayer1 - scorePlayer2;
     }
 
     private void addPlayers(){

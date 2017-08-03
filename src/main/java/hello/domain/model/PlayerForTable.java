@@ -1,8 +1,9 @@
 package hello.domain.model;
 
 public class PlayerForTable {
-    String name;
-    int gamesPlayed;
+    private String name;
+    private int gamesPlayed;
+    private int gamesWon;
 
 
     public PlayerForTable(String name) {
@@ -19,5 +20,13 @@ public class PlayerForTable {
 
     public void increaseGamesPlayed(){
         gamesPlayed++;
+    }
+
+    public int getGamesWon() {
+        return gamesWon;
+    }
+
+    public void increaseGamesWon(){
+        gamesWon++;
     }
 }
