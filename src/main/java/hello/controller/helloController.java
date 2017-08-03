@@ -1,4 +1,4 @@
-package hello.domain.controller;
+package hello.controller;
 
 import hello.domain.model.Table;
 import hello.domain.service.TableService;

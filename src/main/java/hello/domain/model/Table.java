@@ -1,5 +1,6 @@
 package hello.domain.model;
 
+
 public class Table {
     private String name;
     private int gamesPlayed;

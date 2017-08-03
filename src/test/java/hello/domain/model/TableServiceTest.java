@@ -11,7 +11,7 @@ import java.util.List;
 
 public class TableServiceTest {
     @Test
-    public void addPlayers() throws Exception {
+    public void testAddPlayers() throws Exception {
         TableService tableService = new TableService();
         List<Match> matches = new ArrayList<Match>();
         Assert.assertTrue(matches.size() == 0);
@@ -27,12 +27,12 @@ public class TableServiceTest {
 
 
     @Test
-    public void populateTable() throws Exception {
+    public void testAddpopulateTable() throws Exception {
 
     }
 
     @Test
-    public void detectWinLos(){
+    public void testDetectWinLos(){
         TableService tableService = new TableService();
 
         Assert.assertTrue( 0 < tableService.detectWinLoss("3:1"));
