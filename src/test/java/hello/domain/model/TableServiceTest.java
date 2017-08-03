@@ -5,9 +5,13 @@ import hello.domain.service.TableService;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.internal.matchers.Matches;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 
 public class TableServiceTest {
     @Test
@@ -51,6 +55,35 @@ public class TableServiceTest {
         tmp = table.playerIsInTable(new Table("Stefan"));
 
         Assert.assertThat(tmp,CoreMatchers.is(true));
+
+    }
+
+    @Test
+    public void testWinLossIncrement(){
+        TableService table = new TableService();
+        TableService spy = spy(table);
+
+
+        List<Match> matches = new ArrayList<Match>();
+        matches.add(new Match("Niklas","Stefan","3:1"));
+        matches.add(new Match( "Niklas", "Stefan", "1:3"));
+
+
+        List<Match> matchesFiltered = new ArrayList<Match>();
+        matchesFiltered.add(new Match("Niklas","Stefan","3:1"));
+        matchesFiltered.add(new Match( "Niklas", "Stefan", "1:3"));
+
+        List<Match> matchesEmpty = new ArrayList<Match>();
+
+        doReturn(matchesFiltered).when(spy).findByPlayer1("Niklas");
+        doReturn(matchesFiltered).when(spy).findByPlayer1("Stefan");
+        doReturn(matches).when(spy).findAll();
+        doReturn(matchesEmpty).when(spy).findByPlayer2("Stefan");
+        doReturn(matchesEmpty).when(spy).findByPlayer2("Niklas");
+
+        spy.populateTable();
+        Assert.assertThat(table.tables.get(0).getGamesWon(), CoreMatchers.is(1));
+
 
     }
 }

@@ -19,9 +19,7 @@ public class TableService {
     List<Match> matches = new ArrayList<Match>();
 
     public List<Table> populateTable(){
-        for (Match match: repository.findAll()) {
-            matches.add(match);
-        }
+        matches = findAll();
 
         addPlayers(matches);
         addWinLoss();
@@ -32,13 +30,13 @@ public class TableService {
 
     public void addWinLoss(){
         for(Table player : tables) {
-            for (Match match : repository.findByPlayer1(player.getName())) {
+            for (Match match : findByPlayer1(player.getName())) {
                 player.increaseGamesPlayed();
                 if(detectWinLoss(match.getResult()) > 0){
                     player.increaseGamesWon();
                 }
             }
-            for (Match match : repository.findByPlayer2(player.getName())) {
+            for (Match match : findByPlayer2(player.getName())) {
                 player.increaseGamesPlayed();
                 if(detectWinLoss(match.getResult()) < 0){
                     player.increaseGamesWon();
@@ -82,5 +80,21 @@ public class TableService {
     public List<Table> getTable() {
         populateTable();
         return tables;
+    }
+
+    public List<Match> findByPlayer1(String name){
+        return repository.findByPlayer1(name);
+    }
+
+    public List<Match> findByPlayer2(String name){
+        return repository.findByPlayer2(name);
+    }
+
+    public List<Match> findAll(){
+        List<Match> matches = new ArrayList<Match>();
+        for (Match match: repository.findAll()) {
+            matches.add(match);
+        }
+        return matches;
     }
 }
