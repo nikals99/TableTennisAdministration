@@ -5,7 +5,6 @@ import hello.domain.service.TableService;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class TableTest {
 
@@ -17,7 +16,7 @@ public class TableTest {
 
     @Test
     public void testPlayerIsInTable() throws Exception {
-        Table table = new Table();
+        TableService table = new TableService();
         boolean tmp = table.playerIsInTable(new PlayerForTable("Stefan"));
 
         Assert.assertThat(tmp,CoreMatchers.is(false));
