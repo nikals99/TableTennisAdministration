@@ -8,14 +8,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@RequestMapping("/tabletennis")
 @RestController
-public class helloController {
+public class tableTennisController {
 
     @Autowired
     TableService tableService;
 
 
-    @RequestMapping("/")
+    @RequestMapping("/table")
     public List<Table> test(){
         return tableService.getTable();
     }

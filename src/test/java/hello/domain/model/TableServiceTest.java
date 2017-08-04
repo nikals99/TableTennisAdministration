@@ -17,11 +17,12 @@ public class TableServiceTest {
     public void testAddPlayers() throws Exception {
         TableService tableService = new TableService();
         List<Match> matches = new ArrayList<Match>();
-        Assert.assertTrue(matches.size() == 0);
 
 
 
         matches.add(new Match("Niklas","Peter","3:1"));
+        tableService.addPlayers(matches);
+        Assert.assertThat( tableService.tables.size(), CoreMatchers.is(2));
         matches.add(new Match( "Niklas", "Stefan", "1:3"));
         matches.add(new Match( "Rene", "Bernhard", "2:3"));
         tableService.addPlayers(matches);
