@@ -5,7 +5,6 @@ import hello.domain.service.TableService;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.internal.matchers.Matches;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,23 +66,86 @@ public class TableServiceTest {
         List<Match> matches = new ArrayList<Match>();
         matches.add(new Match("Niklas","Stefan","3:1"));
         matches.add(new Match( "Niklas", "Stefan", "1:3"));
+        matches.add(new Match( "Stefan", "Niklas", "1:3"));
 
 
-        List<Match> matchesFiltered = new ArrayList<Match>();
-        matchesFiltered.add(new Match("Niklas","Stefan","3:1"));
-        matchesFiltered.add(new Match( "Niklas", "Stefan", "1:3"));
+        setupTestWinLossIncrement(matches, spy);
 
-        List<Match> matchesEmpty = new ArrayList<Match>();
 
-        doReturn(matchesFiltered).when(spy).findByPlayer1("Niklas");
-        doReturn(matchesFiltered).when(spy).findByPlayer1("Stefan");
-        doReturn(matches).when(spy).findAll();
-        doReturn(matchesEmpty).when(spy).findByPlayer2("Stefan");
-        doReturn(matchesEmpty).when(spy).findByPlayer2("Niklas");
+
 
         spy.populateTable();
-        Assert.assertThat(table.tables.get(0).getGamesWon(), CoreMatchers.is(1));
-
+        Assert.assertThat(table.tables.get(0).getGamesWon(), CoreMatchers.is(2));
+        Assert.assertThat(table.tables.get(1).getGamesWon(), CoreMatchers.is(1));
 
     }
+
+    private void setupTestWinLossIncrement(List<Match> matches,TableService spy){
+        List<List<Match>> matchesFiltered1 = generateMatchesFiltered1(matches);
+        List<List<Match>> matchesFiltered2 = generateMatchesFiltered2(matches);
+        List<String> playerList = generatePlayerList(matches);
+
+        for(int i = 0; i< playerList.size(); i++){
+            doReturn(matchesFiltered1.get(i)).when(spy).findByPlayer1(playerList.get(i));
+            doReturn(matchesFiltered2.get(i)).when(spy).findByPlayer2(playerList.get(i));
+        }
+
+
+        doReturn(matches).when(spy).findAll();
+    }
+
+    private List<List<Match>> generateMatchesFiltered1(List<Match> matches){
+        List<String> players = generatePlayerList(matches);
+        List<List<Match>> matchesFiltered = new ArrayList<>();
+        int x = 0;
+        for(String player : players){
+            matchesFiltered.add(new ArrayList<Match>());
+
+            for(Match match: matches){
+                if(player.equals(match.getPlayer1())){
+                    matchesFiltered.get(x).add(match);
+                }
+            }
+            x++;
+        }
+        return matchesFiltered;
+    }
+
+    private List<List<Match>> generateMatchesFiltered2(List<Match> matches){
+        List<String> players = generatePlayerList(matches);
+        List<List<Match>> matchesFiltered = new ArrayList<>();
+        int x = 0;
+        for(String player : players){
+            matchesFiltered.add(new ArrayList<Match>());
+
+            for(Match match: matches){
+                if(player.equals(match.getPlayer2())){
+                    matchesFiltered.get(x).add(match);
+                }
+            }
+            x++;
+        }
+        return matchesFiltered;
+    }
+
+
+
+
+    private List<String> generatePlayerList(List<Match> matches){
+        List<String> players = new ArrayList<String>();
+        for (Match match: matches) {
+            String tmp = match.getPlayer1();
+            if (!players.contains(tmp)) {
+                players.add(tmp);
+            }
+
+            tmp = match.getPlayer2();
+            if (!players.contains(tmp)) {
+                players.add(tmp);
+            }
+        }
+        return players;
+    }
+
+
 }
