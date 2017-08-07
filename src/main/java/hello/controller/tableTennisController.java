@@ -4,12 +4,14 @@ import hello.domain.model.Table;
 import hello.domain.service.TableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RequestMapping("/tabletennis")
+
 @RestController
+
 public class tableTennisController {
 
     @Autowired
@@ -20,5 +22,7 @@ public class tableTennisController {
     public List<Table> test(){
         return tableService.getTable();
     }
+
+
 
 }

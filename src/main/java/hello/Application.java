@@ -25,6 +25,8 @@ public class Application {
     @Bean
     public CommandLineRunner commandLineRunner() {
         return args -> {
+
+
             repository.save(new Match( "Niklas", "Stefan", "1:3"));
             repository.save(new Match( "Rene", "Bernhard", "2:3"));
             repository.save(new Match( "Sven", "Niklas", "3:1"));
