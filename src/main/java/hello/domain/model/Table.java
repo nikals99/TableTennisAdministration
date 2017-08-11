@@ -6,6 +6,10 @@ public class Table {
     private int gamesPlayed;
     private int gamesWon;
 
+    public void resetPlayer(){
+        gamesPlayed = 0;
+        gamesWon =0;
+    }
 
     public Table(String name) {
         this.name = name;
@@ -30,4 +34,11 @@ public class Table {
     public void increaseGamesWon(){
         gamesWon++;
     }
+
+    public int getWinLosDiff(){
+        return gamesWon- (gamesPlayed - gamesWon);
+    }
+
+
+
 }

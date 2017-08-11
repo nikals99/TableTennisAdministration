@@ -27,13 +27,13 @@ public class Application {
         return args -> {
 
 
-            repository.save(new Match( "Niklas", "Stefan", "1:3"));
-            repository.save(new Match( "Rene", "Bernhard", "2:3"));
-            repository.save(new Match( "Sven", "Niklas", "3:1"));
-            repository.save(new Match( "Sven", "Niklas", "2:3"));
-            repository.save(new Match( "Sven", "Thomas", "3:2"));
-
-
+            repository.save(new Match( "Niklas", "Stefan", "4,4,4"));
+            repository.save(new Match( "Rene", "Thomas", "3,-2,3,-5,-5"));
+            repository.save(new Match( "Peter", "Jens", "3,-2,3,-5,-5"));
+            repository.save(new Match( "Jens", "Stefan", "3,-2,3,-5,-5"));
+            repository.save(new Match( "Peter", "Sven", "3,-2,3,-5,-5"));
+            repository.save(new Match( "Rene", "Peter", "3,-2,3,-5,-5"));
+            repository.save(new Match( "Sven", "Bernhard", "3,-2,3,-5,-5"));
 
         };
     }

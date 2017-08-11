@@ -13,8 +13,9 @@ public class Match {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String player1, player2, result;
+    private String[] resultDetail;
 
-    protected Match(){
+    protected Match() {
 
     }
 
@@ -25,8 +26,11 @@ public class Match {
     }
 
 
-
     public int getId() {
+        return id;
+    }
+
+    public int getIdent(){
         return id;
     }
 
@@ -39,6 +43,36 @@ public class Match {
     }
 
     public String getResult() {
-        return result;
+        String[] tmp = result.split(",");
+        int winsA = 0, winsB = 0;
+        for(int i = 0; i<tmp.length;i++){
+            if(Integer.valueOf(tmp[i])>0){
+               winsA++;
+            }else {
+                winsB++;
+            }
+        }
+        return winsA + ":" + winsB;
+
+    }
+
+    public String[] getResultDetail() {
+        resultDetail = result.split(",");
+        for(int i = 0; i < resultDetail.length; i++){
+            int r = Integer.valueOf(resultDetail[i]);
+            if(r > 0 && r<= 9){
+                resultDetail[i] = "11:"+r;
+            }else if(r > 9){
+                resultDetail[i] = r+2 +":"+r;
+            }else if(r>=-9){
+                resultDetail[i] = Math.abs(r)+":11";
+            }else{
+                resultDetail[i] = Math.abs(r)+":11"+Math.abs(r)+2;
+            }
+
+
+        }
+        return resultDetail;
+
     }
 }

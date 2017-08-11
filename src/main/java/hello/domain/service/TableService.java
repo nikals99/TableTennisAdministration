@@ -6,8 +6,7 @@ import hello.domain.model.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class TableService {
@@ -30,6 +29,7 @@ public class TableService {
 
     public void addWinLoss(){
         for(Table player : tables) {
+            player.resetPlayer();
             for (Match match : findByPlayer1(player.getName())) {
                 player.increaseGamesPlayed();
                 if(detectWinLoss(match.getResult()) > 0){
@@ -79,6 +79,8 @@ public class TableService {
 
     public List<Table> getTable() {
         populateTable();
+        tables.sort(Comparator.comparing(Table::getWinLosDiff));
+        Collections.reverse(tables);
         return tables;
     }
 
