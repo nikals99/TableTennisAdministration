@@ -1,0 +1,13 @@
+<table class="table table-bordered table-hover">
+  <tr>
+    <th>Platz</th>
+    <th>Name</th>
+    <th>Spiele</th>
+  </tr>
+  <tr *ngFor="let tr of table; let i = index" [attr.data-index]="i">
+    <td>{{i+1}}</td>
+    <td>{{tr.name}}</td>
+    <td>{{tr.gamesWon}}:{{tr.gamesPlayed-tr.gamesWon}} ({{tr.gamesWon - (tr.gamesPlayed-tr.gamesWon)}})</td>
+  </tr>
+</table>
+<a routerLink="/"><button type="button" class="btn btn-success">Zurück</button> </a>

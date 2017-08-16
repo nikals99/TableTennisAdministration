@@ -1,0 +1,23 @@
+@import "variables/colors";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "variables/bootstrap_variables";
+
+body{
+  background-color: $background ;
+
+}
+
+.matchtable, .matchtable th, .matchtable td {
+  border: 1px solid grey;
+  border-collapse: collapse;
+  padding: 5px;
+}
+
+.table-background-even{
+  background-color: $table-background-even;
+}
+
+.table-background-odd{
+  background-color: $table-background-odd;
+}
+

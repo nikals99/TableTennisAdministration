@@ -1,0 +1,62 @@
+<div class="container">
+  <h1>Match Form</h1>
+  <form (ngSubmit)="onSubmit(matchForm.value)" #matchForm="ngForm">
+
+    <div class="form-group">
+      <label for="player1">Spieler 1</label>
+      <input type="text" id="player1" name="player1" ngModel minlength="3" #player1="ngModel" required><br><br>
+      <div *ngIf="player1.invalid && (player1.dirty || player1.touched)" class="alert alert-danger" role="alert">
+        <div *ngIf="player1.hasError('required')">
+          Name ist erforderlich
+        </div>
+        <div *ngIf="player1.hasError('minlength')">
+          Name muss mindestens 3 Buchstaben lang sein.
+        </div>
+
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="player2">Spieler 2</label>
+      <input type="text" id="player2" name="player2" ngModel #player2="ngModel" required minlength="3"><br><br>
+      <div *ngIf="player2.invalid && (player2.dirty || player2.touched)" class="alert alert-danger" role="alert">
+        <div *ngIf="player2.hasError('required')">
+          Name ist erforderlich
+        </div>
+        <div *ngIf="player2.hasError('minlength')">
+          Name muss mindestens 3 Buchstaben lang sein.
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="result">Ergebnis</label>
+
+      <input type="text"
+             id="result"
+             name="result"
+             ngModel
+             #result="ngModel"
+             required
+             pattern="((([0-9]+|-[0-9]+),)+)([0-9]+|-[0-9]+)"
+      >
+
+      <br><br>
+      <div *ngIf="result.invalid && (result.dirty || result.touched)" class="alert alert-danger" role="alert" >
+        <div *ngIf="result.hasError('required')">
+          Geben sie das Ergebnis ein.
+        </div>
+        <div *ngIf="result.hasError('pattern')">
+          Das Ergebnis muss nach dem Pattern 3,-3,3,-3,3 eingegeben werden.
+        </div>
+
+      </div>
+    </div>
+
+
+    <button type="submit" class="btn btn-success" [disabled]="!matchForm.valid">Submit</button>
+    <a routerLink="/"><button type="button" class="btn btn-primary">Cancel</button></a>
+
+  </form>
+</div>
+

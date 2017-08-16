@@ -1,0 +1,32 @@
+<div>
+  <table class="table table-bordered table-hover">
+    <tr >
+      <th>Spieler 1</th>
+      <th>Spieler 2</th>
+      <th colspan="2">Ergebnis</th>
+    </tr>
+    <tr *ngFor="let match of matches" (click)="onSelect(match)" >
+      <td>{{match.player1}}</td>
+      <td>{{match.player2}}</td>
+      <td>{{match.result}}</td>
+      <td><button type="button" class="btn btn-danger" (click)="deleteMatch(match); $event.stopPropagation()">X</button> </td>
+    </tr>
+  </table>
+  <a routerLink="/addGame"><button type="button" class="btn btn-success">ADD</button> </a>
+  <a routerLink="/gettable"><button type="button" class="btn btn-primary">Tabelle</button> </a>
+</div>
+
+<div *ngIf="selectedMatch">
+
+  <table class="table table-bordered">
+    <tr>
+      <th style="text-align: center" colspan="2">{{selectedMatch.player1}} vs. {{selectedMatch.player2}}</th>
+    </tr>
+    <tr *ngFor="let res of selectedMatch.resultDetail; let i = index" [attr.data-index]="i">
+      <th>Satz: {{i+1}}</th>
+      <th>{{res}}</th>
+    </tr>
+  </table>
+
+</div>
+
