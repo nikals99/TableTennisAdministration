@@ -11,6 +11,5 @@ import java.util.List;
 public interface MatchRepository extends CrudRepository<Match, Integer> {
     List<Match> findByPlayer1(String name);
     List<Match> findByPlayer2(String name);
-
 }
 
