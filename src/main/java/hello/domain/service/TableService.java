@@ -1,7 +1,7 @@
 package hello.domain.service;
 
-import hello.domain.model.Match;
-import hello.domain.model.MatchRepository;
+import hello.domain.model.Game;
+import hello.domain.model.GameRepository;
 import hello.domain.model.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,17 +12,16 @@ import java.util.*;
 public class TableService {
 
     @Autowired
-    private MatchRepository repository;
+    private GameRepository repository;
 
     public List<Table> tables = new ArrayList<Table>();
-    List<Match> matches = new ArrayList<Match>();
+    List<Game> games = new ArrayList<Game>();
 
     public List<Table> populateTable(){
-        matches = findAll();
-
-        addPlayers(matches);
+        games = findAll();
+        addPlayers(games);
         addWinLoss();
-
+        calculateElo();
 
         return tables;
     }
@@ -30,15 +29,15 @@ public class TableService {
     public void addWinLoss(){
         for(Table player : tables) {
             player.resetPlayer();
-            for (Match match : findByPlayer1(player.getName())) {
+            for (Game game : findByPlayer1(player.getName())) {
                 player.increaseGamesPlayed();
-                if(detectWinLoss(match.getResult()) > 0){
+                if(detectWinLoss(game.getResult()) > 0){
                     player.increaseGamesWon();
                 }
             }
-            for (Match match : findByPlayer2(player.getName())) {
+            for (Game game : findByPlayer2(player.getName())) {
                 player.increaseGamesPlayed();
-                if(detectWinLoss(match.getResult()) < 0){
+                if(detectWinLoss(game.getResult()) < 0){
                     player.increaseGamesWon();
                 }
             }
@@ -54,14 +53,14 @@ public class TableService {
         return scorePlayer1 - scorePlayer2;
     }
 
-    public void addPlayers(List<Match> matches){
-        for (Match match: matches) {
-            Table tmp = new Table(match.getPlayer1());
+    public void addPlayers(List<Game> games){
+        for (Game game : games) {
+            Table tmp = new Table(game.getPlayer1());
             if (!playerIsInTable(tmp)) {
                 tables.add(tmp);
             }
 
-            tmp = new Table(match.getPlayer2());
+            tmp = new Table(game.getPlayer2());
             if (!playerIsInTable(tmp)) {
                 tables.add(tmp);
             }
@@ -70,7 +69,7 @@ public class TableService {
 
     public boolean playerIsInTable(Table player){
         for(Table x : tables){
-            if(x.getName() == player.getName()){
+            if(x.getName().equals(player.getName())){
                 return true;
             }
         }
@@ -79,24 +78,66 @@ public class TableService {
 
     public List<Table> getTable() {
         populateTable();
-        tables.sort(Comparator.comparing(Table::getWinLosDiff));
+        tables.sort(Comparator.comparing(Table::getElo));
         Collections.reverse(tables);
         return tables;
     }
 
-    public List<Match> findByPlayer1(String name){
+    public List<Game> findByPlayer1(String name){
         return repository.findByPlayer1(name);
     }
 
-    public List<Match> findByPlayer2(String name){
+    public List<Game> findByPlayer2(String name){
         return repository.findByPlayer2(name);
     }
 
-    public List<Match> findAll(){
-        List<Match> matches = new ArrayList<Match>();
-        for (Match match: repository.findAll()) {
-            matches.add(match);
+    public List<Game> findAll(){
+        List<Game> games = new ArrayList<Game>();
+        for (Game game : repository.findAll()) {
+            games.add(game);
         }
-        return matches;
+        return games;
+    }
+
+    public void calculateElo(){
+        for(Game game: games){
+            int eloPlayer1 = 0,eloPlayer2= 0;
+            for(Table player: tables){
+                if(player.getName().equals(game.getPlayer1())){
+                    eloPlayer1 = player.getElo();
+                }else if(player.getName().equals(game.getPlayer2())){
+                    eloPlayer2 = player.getElo();
+                }
+            }
+            int eloDifference = calulateEloDifference(eloPlayer1,eloPlayer2,calculateWinner(game.getResult()));
+            for(Table player: tables){
+                if(player.getName().equals(game.getPlayer1())){
+                   player.setElo(eloPlayer1+eloDifference);
+                }else if(player.getName().equals(game.getPlayer2())){
+                    player.setElo(eloPlayer2-eloDifference);
+                }
+            }
+        }
+    }
+
+    public int calculateWinner(String res){
+       if(detectWinLoss(res)>0){
+        return 1;
+       }else {
+           return 0;
+       }
+    }
+
+    public int calulateEloDifference(double eloPlayer1, double eloPlayer2, int result){
+        int eloDifference;
+        int k = 32;
+        double expectedResult;
+
+
+        expectedResult = 1.0 / (1.0 + Math.pow(10.0, (eloPlayer2 - eloPlayer1) / 400.0));
+        eloDifference = (int)Math.round(k*(result-expectedResult));
+
+
+        return eloDifference;
     }
 }

@@ -14,18 +14,37 @@ import static org.mockito.Mockito.spy;
 
 public class TableServiceTest {
     @Test
+    public void calulateSingleElo() throws Exception {
+        TableService tableService = new TableService();
+
+        Assert.assertThat(tableService.calulateEloDifference(1500,1500,1),CoreMatchers.is(16));
+        Assert.assertThat(tableService.calulateEloDifference(1000,1000,1),CoreMatchers.is(16));
+        Assert.assertThat(tableService.calulateEloDifference(2000,2000,0),CoreMatchers.is(-16));
+
+        Assert.assertThat(tableService.calulateEloDifference(1600,1400,1),CoreMatchers.is(8));
+        Assert.assertThat(tableService.calulateEloDifference(1400,1600,1),CoreMatchers.is(24));
+
+        Assert.assertThat(tableService.calulateEloDifference(1800,1200,1),CoreMatchers.is(1));
+        Assert.assertThat(tableService.calulateEloDifference(1800,1200,1),CoreMatchers.is(1));
+
+        Assert.assertThat(tableService.calulateEloDifference(1000,1000,1),CoreMatchers.is(16));
+        Assert.assertThat(tableService.calulateEloDifference(1000,1000,1),CoreMatchers.is(16));
+
+    }
+
+    @Test
     public void testAddPlayers() throws Exception {
         TableService tableService = new TableService();
-        List<Match> matches = new ArrayList<Match>();
+        List<Game> games = new ArrayList<Game>();
 
 
 
-        matches.add(new Match("Niklas","Peter","3:1"));
-        tableService.addPlayers(matches);
+        games.add(new Game("Niklas","Peter","3:1"));
+        tableService.addPlayers(games);
         Assert.assertThat( tableService.tables.size(), CoreMatchers.is(2));
-        matches.add(new Match( "Niklas", "Stefan", "1:3"));
-        matches.add(new Match( "Rene", "Bernhard", "2:3"));
-        tableService.addPlayers(matches);
+        games.add(new Game( "Niklas", "Stefan", "1:3"));
+        games.add(new Game( "Rene", "Bernhard", "2:3"));
+        tableService.addPlayers(games);
         Assert.assertThat( tableService.tables.size(), CoreMatchers.is(5));
     }
 
@@ -41,6 +60,8 @@ public class TableServiceTest {
 
         Assert.assertTrue( 0 < tableService.detectWinLoss("3:1"));
         Assert.assertTrue( 0 > tableService.detectWinLoss("1:3"));
+        Assert.assertTrue( 0 == tableService.detectWinLoss("1:1"));
+
 
     }
 
@@ -58,19 +79,19 @@ public class TableServiceTest {
 
     }
 
-    @Test
+   // @Test
     public void testWinLossIncrement(){
         TableService table = new TableService();
         TableService spy = spy(table);
 
 
-        List<Match> matches = new ArrayList<Match>();
-        matches.add(new Match("Niklas","Stefan","3:1"));
-        matches.add(new Match( "Niklas", "Stefan", "1:3"));
-        matches.add(new Match( "Stefan", "Niklas", "1:3"));
+        List<Game> games = new ArrayList<Game>();
+        games.add(new Game("Niklas","Stefan","3:1"));
+        games.add(new Game( "Niklas", "Stefan", "1:3"));
+        games.add(new Game( "Stefan", "Niklas", "1:3"));
 
 
-        setupTestWinLossIncrement(matches, spy);
+        setupTestWinLossIncrement(games, spy);
 
 
 
@@ -81,10 +102,10 @@ public class TableServiceTest {
 
     }
 
-    private void setupTestWinLossIncrement(List<Match> matches,TableService spy){
-        List<List<Match>> matchesFiltered1 = generateMatchesFiltered1(matches);
-        List<List<Match>> matchesFiltered2 = generateMatchesFiltered2(matches);
-        List<String> playerList = generatePlayerList(matches);
+    private void setupTestWinLossIncrement(List<Game> games, TableService spy){
+        List<List<Game>> matchesFiltered1 = generateMatchesFiltered1(games);
+        List<List<Game>> matchesFiltered2 = generateMatchesFiltered2(games);
+        List<String> playerList = generatePlayerList(games);
 
         for(int i = 0; i< playerList.size(); i++){
             doReturn(matchesFiltered1.get(i)).when(spy).findByPlayer1(playerList.get(i));
@@ -92,19 +113,19 @@ public class TableServiceTest {
         }
 
 
-        doReturn(matches).when(spy).findAll();
+        doReturn(games).when(spy).findAll();
     }
 
-    private List<List<Match>> generateMatchesFiltered1(List<Match> matches){
-        List<String> players = generatePlayerList(matches);
-        List<List<Match>> matchesFiltered = new ArrayList<>();
+    private List<List<Game>> generateMatchesFiltered1(List<Game> games){
+        List<String> players = generatePlayerList(games);
+        List<List<Game>> matchesFiltered = new ArrayList<>();
         int x = 0;
         for(String player : players){
-            matchesFiltered.add(new ArrayList<Match>());
+            matchesFiltered.add(new ArrayList<Game>());
 
-            for(Match match: matches){
-                if(player.equals(match.getPlayer1())){
-                    matchesFiltered.get(x).add(match);
+            for(Game game : games){
+                if(player.equals(game.getPlayer1())){
+                    matchesFiltered.get(x).add(game);
                 }
             }
             x++;
@@ -112,16 +133,16 @@ public class TableServiceTest {
         return matchesFiltered;
     }
 
-    private List<List<Match>> generateMatchesFiltered2(List<Match> matches){
-        List<String> players = generatePlayerList(matches);
-        List<List<Match>> matchesFiltered = new ArrayList<>();
+    private List<List<Game>> generateMatchesFiltered2(List<Game> games){
+        List<String> players = generatePlayerList(games);
+        List<List<Game>> matchesFiltered = new ArrayList<>();
         int x = 0;
         for(String player : players){
-            matchesFiltered.add(new ArrayList<Match>());
+            matchesFiltered.add(new ArrayList<Game>());
 
-            for(Match match: matches){
-                if(player.equals(match.getPlayer2())){
-                    matchesFiltered.get(x).add(match);
+            for(Game game : games){
+                if(player.equals(game.getPlayer2())){
+                    matchesFiltered.get(x).add(game);
                 }
             }
             x++;
@@ -132,15 +153,15 @@ public class TableServiceTest {
 
 
 
-    private List<String> generatePlayerList(List<Match> matches){
+    private List<String> generatePlayerList(List<Game> games){
         List<String> players = new ArrayList<String>();
-        for (Match match: matches) {
-            String tmp = match.getPlayer1();
+        for (Game game : games) {
+            String tmp = game.getPlayer1();
             if (!players.contains(tmp)) {
                 players.add(tmp);
             }
 
-            tmp = match.getPlayer2();
+            tmp = game.getPlayer2();
             if (!players.contains(tmp)) {
                 players.add(tmp);
             }

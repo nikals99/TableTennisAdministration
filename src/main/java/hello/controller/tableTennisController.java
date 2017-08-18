@@ -1,5 +1,6 @@
 package hello.controller;
 
+import hello.domain.model.GameRepository;
 import hello.domain.model.Table;
 import hello.domain.service.TableService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +18,14 @@ public class tableTennisController {
     @Autowired
     TableService tableService;
 
+    @Autowired
+    GameRepository repository;
 
     @RequestMapping("/table")
     public List<Table> test(){
         return tableService.getTable();
     }
+
 
 
 

@@ -5,10 +5,20 @@ public class Table {
     private String name;
     private int gamesPlayed;
     private int gamesWon;
+    private int elo;
 
     public void resetPlayer(){
         gamesPlayed = 0;
         gamesWon =0;
+        elo = 1500;
+    }
+
+    public int getElo() {
+        return elo;
+    }
+
+    public void setElo(int elo) {
+        this.elo = elo;
     }
 
     public Table(String name) {

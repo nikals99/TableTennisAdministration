@@ -1,30 +1,49 @@
 package hello.domain.model;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.persistence.Table;
 
 @Entity
-public class Match {
+@Table(name = "game", schema = "db_tt")
+public class Game {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    private String player1, player2, result;
-    private String[] resultDetail;
+    @Column(name="player1")
+    private String player1;
+    @Column(name="player2")
+    private String player2;
+    @Column(name="result")
+    private String result;
+   // private String[] resultDetail;
 
-    protected Match() {
+    protected Game() {
 
     }
 
-    public Match(String player1, String player2, String result) {
+    public Game(String player1, String player2, String result) {
         this.player1 = player1;
         this.player2 = player2;
         this.result = result;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setPlayer1(String player1) {
+        this.player1 = player1;
+    }
+
+    public void setPlayer2(String player2) {
+        this.player2 = player2;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
 
     public int getId() {
         return id;
@@ -57,6 +76,7 @@ public class Match {
     }
 
     public String[] getResultDetail() {
+        String[] resultDetail;
         resultDetail = result.split(",");
         for(int i = 0; i < resultDetail.length; i++){
             int r = Integer.valueOf(resultDetail[i]);

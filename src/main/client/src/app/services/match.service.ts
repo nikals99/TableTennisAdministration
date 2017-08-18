@@ -15,7 +15,7 @@ export class MatchService{
   getMatches(): Promise<Match[]> {
     return this.http.get("/game")
       .toPromise()
-      .then(response => response.json()._embedded.matches as Match[])
+      .then(response => response.json()._embedded.games as Match[])
       .then(match => match.reverse())
       .catch(this.handleError);
   }
@@ -28,7 +28,7 @@ export class MatchService{
   }
 
   private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error); // for demo purposes only
+    console.error('An error occurred', error);
     return Promise.reject(error.message || error);
   }
 

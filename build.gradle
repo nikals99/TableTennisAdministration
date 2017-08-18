@@ -7,6 +7,7 @@ buildscript {
     }
 }
 
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
@@ -20,6 +21,7 @@ jar {
 repositories {
     mavenCentral()
     jcenter()
+
 }
 
 sourceCompatibility = 1.8
@@ -30,15 +32,13 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-web") {
         exclude module: "spring-boot-starter-tomcat"
     }
-    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
-    compile("org.springframework.boot:spring-boot-starter-jetty")
-    // end::jetty[]
-    // tag::actuator[]
     compile("org.springframework.boot:spring-boot-starter-actuator")
     // end::actuator[]
-    compile("com.h2database:h2")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile('mysql:mysql-connector-java')
+
     compile("org.springframework.boot:spring-boot-starter-data-rest")
     testCompile("org.mockito:mockito-core:2.7.22")
     testCompile("junit:junit:4.12")
 }
+
