@@ -1,0 +1,41 @@
+version: '2'
+networks:
+  main:
+
+services:
+  db:
+    image: "mysql"
+    environment:
+       MYSQL_ROOT_PASSWORD: root
+    networks:
+      main:
+        aliases:
+          - db.docker
+  proxy:
+    image: "proxy:latest"
+    ports:
+      ["80:80"]
+    networks:
+      main:
+        aliases:
+          - app.docker
+    depends_on:
+      - db
+  web:
+    image: "ttfe:latest"
+    ports:
+      ["2100:2100"]
+    networks:
+        main:
+          aliases:
+            - fe.docker
+  spring:
+    image: "demo/javatest"
+    ports: ["8080:8080"]
+    networks:
+        main:
+          aliases:
+              - be.docker
+    depends_on:
+      - db
+
